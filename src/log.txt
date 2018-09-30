@@ -1,0 +1,3 @@
+Setting window size to default 800x600.
+Initialized SDL.
+Initialized Window.
