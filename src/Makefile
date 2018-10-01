@@ -1,4 +1,4 @@
-OBJS = log.o window.o image.o main.o
+OBJS = log.o window.o image.o imagecollection.o main.o
 INC = C:\code\libs\SDL2-2.0.8\i686-w64-mingw32\include\SDL2
 LIB = C:\code\libs\SDL2-2.0.8\i686-w64-mingw32\lib
 FLAGS = -Wall -Wextra

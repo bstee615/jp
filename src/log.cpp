@@ -32,6 +32,6 @@ void lprintf(const char *fmt, ...)
     va_list arg;
 
     va_start(arg, fmt);
-    fprintf(log_stream, fmt, arg);
+    vfprintf(log_stream, fmt, arg);
     va_end(arg);
 }

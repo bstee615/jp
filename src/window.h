@@ -1,4 +1,8 @@
+#ifndef WINDOW_H
+#define WINDOW_H
+
 #include <SDL.h>
+#include "image.h"
 
 class Window {
 public:
@@ -8,5 +12,7 @@ public:
     Window(const char *title, int w, int h);
     ~Window();
 
-    SDL_Surface *loadBMP(const char *path);
+    void updateSurface();
 };
+
+#endif

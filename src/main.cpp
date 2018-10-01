@@ -9,6 +9,7 @@ and may not be redistributed without written permission.*/
 #include "log.h"
 #include "window.h"
 #include "image.h"
+#include "imagecollection.h"
 
 //Screen dimension constants
 static int SCREEN_WIDTH = 640;
@@ -59,17 +60,14 @@ int main( int argc, char** argv )
     processArgs(argc, argv);
 
     Window *window = new Window("JetPack", SCREEN_WIDTH, SCREEN_HEIGHT);
-    
-    
-    Image *img = new Image("hello_world.bmp");
-    SDL_Rect srcrect = {200, 200, 300, 300};
-    SDL_Rect dstrect = {10, 10, 0, 0};
-    SDL_BlitSurface(img->surface, &srcrect, window->screenSurface, &dstrect);
-    SDL_UpdateWindowSurface(window->window);
+    ImageCollection *images = new ImageCollection();
+    images->loadImage("hello_world.bmp");
+    images->blitAllImagesOnSurface(window->screenSurface);
+    window->updateSurface();
     SDL_Delay(2000);
-    
+
+    delete images;
     delete window;
-    delete img;
 
     close();
 

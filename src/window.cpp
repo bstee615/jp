@@ -18,6 +18,6 @@ Window::~Window() {
     window = NULL;
 }
 
-void loadBMP(const char *path) {
-    
+void Window::updateSurface() {
+    SDL_UpdateWindowSurface(window);
 }
