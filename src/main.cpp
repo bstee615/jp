@@ -7,42 +7,22 @@ and may not be redistributed without written permission.*/
 #include <stdlib.h>
 #include <getopt.h>
 #include "log.h"
-#include "jp.h"
+#include "window.h"
+#include "image.h"
 
 //Screen dimension constants
 static int SCREEN_WIDTH = 640;
 static int SCREEN_HEIGHT = 480;
 
-void initSDL()
-{
-	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
-	{
-		lprintf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-	}
-    else {
-		lprintf("Initialized SDL.\n");
-    }
-}
-
-void initWindow(SDL_Window *window)
-{
-    window = SDL_CreateWindow( "JetPack", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
-
-    if( window == NULL )
-    {
-        lprintf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
-    }
-    else
-    {
-		lprintf("Initialized Window.\n");
-    }
-}
+SDL_Window* gWindow = NULL;
+SDL_Surface* gScreenSurface = NULL;
+SDL_Surface* gHelloWorld = NULL;
 
 void processArgs(int argc, char **argv)
 {
     int c;
     extern char *optarg;
-    extern int optind, optopt, opterr;
+    extern int optopt;
 
     int default_size = 1;
 
@@ -67,26 +47,31 @@ void processArgs(int argc, char **argv)
     }
 }
 
-void cleanup(SDL_Window *window)
+void close()
 {
-	SDL_DestroyWindow(window);
-	SDL_Quit();
-
+    SDL_Quit();
     close_log();
 }
 
-int main(int argc, char** argv)
+int main( int argc, char** argv )
 {
     start_log();
     processArgs(argc, argv);
 
-    initSDL();
+    Window *window = new Window("JetPack", SCREEN_WIDTH, SCREEN_HEIGHT);
+    
+    
+    Image *img = new Image("hello_world.bmp");
+    SDL_Rect srcrect = {200, 200, 300, 300};
+    SDL_Rect dstrect = {10, 10, 0, 0};
+    SDL_BlitSurface(img->surface, &srcrect, window->screenSurface, &dstrect);
+    SDL_UpdateWindowSurface(window->window);
+    SDL_Delay(2000);
+    
+    delete window;
+    delete img;
 
-	SDL_Window* window = NULL;
-    initWindow(window);
+    close();
 
-    jp_loop(window);
-    cleanup(window);
-
-	return 0;
+    return 0;
 }
