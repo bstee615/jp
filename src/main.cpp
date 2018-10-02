@@ -3,8 +3,7 @@ and may not be redistributed without written permission.*/
 
 //Using SDL and standard IO
 #include <SDL.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <getopt.h>
 #include "log.h"
 #include "gamemanager.h"
@@ -32,7 +31,7 @@ void processArgs(int argc, char **argv)
             default_size = 0;
             break;
         case '?':
-            printf("unknown arg %c\n", optopt);
+            lprintf("unknown arg %c\n", optopt);
             break;
         }
     }

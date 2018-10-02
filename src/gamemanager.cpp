@@ -91,6 +91,10 @@ void GameManager::handleKeyUp(SDL_Event &e) {
             keys.right = false;
             break;
 
+        case SDLK_ESCAPE:
+            quit = true;
+            break;
+
         default:
             lprintf("unregistered key %d released.\n", e.key.keysym.sym);
             break;

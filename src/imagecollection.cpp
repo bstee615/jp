@@ -18,8 +18,7 @@ Image *ImageCollection::addImage(Image *img) {
 
 Image *ImageCollection::loadImage(const char *path) {
     lprintf("Loading %s.\n", path);
-    Image *img = new Image(path);
-    return addImage(img);
+    return addImage(new Image(path));
 }
 
 void ImageCollection::blitAllImagesOnSurface(SDL_Surface *dstSurface) {
