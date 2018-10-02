@@ -7,17 +7,11 @@ and may not be redistributed without written permission.*/
 #include <stdlib.h>
 #include <getopt.h>
 #include "log.h"
-#include "window.h"
-#include "image.h"
-#include "imagecollection.h"
+#include "gamemanager.h"
 
 //Screen dimension constants
 static int SCREEN_WIDTH = 640;
 static int SCREEN_HEIGHT = 480;
-
-SDL_Window* gWindow = NULL;
-SDL_Surface* gScreenSurface = NULL;
-SDL_Surface* gHelloWorld = NULL;
 
 void processArgs(int argc, char **argv)
 {
@@ -59,15 +53,11 @@ int main( int argc, char** argv )
     start_log();
     processArgs(argc, argv);
 
-    Window *window = new Window("JetPack", SCREEN_WIDTH, SCREEN_HEIGHT);
-    ImageCollection *images = new ImageCollection();
-    images->loadImage("hello_world.bmp");
-    images->blitAllImagesOnSurface(window->screenSurface);
-    window->updateSurface();
-    SDL_Delay(2000);
+    GameManager *manager = new GameManager(SCREEN_WIDTH, SCREEN_HEIGHT);
+    manager->loadImage("hello_world.bmp");
+    manager->loop();
 
-    delete images;
-    delete window;
+    delete manager;
 
     close();
 

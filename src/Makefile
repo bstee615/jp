@@ -1,4 +1,4 @@
-OBJS = log.o window.o image.o imagecollection.o main.o
+OBJS = log.o window.o image.o imagecollection.o gamemanager.o main.o
 INC = C:\code\libs\SDL2-2.0.8\i686-w64-mingw32\include\SDL2
 LIB = C:\code\libs\SDL2-2.0.8\i686-w64-mingw32\lib
 FLAGS = -Wall -Wextra
@@ -11,7 +11,7 @@ all: $(OBJS)
 	g++ $(OBJS) $(ALL_FLAGS) -o $(EXE_NAME)
 
 run: all
-	$(EXE_NAME)
+	$(EXE_NAME) -w 1024 -h 768
 
 clean:
 	rm -r *.o *.exe

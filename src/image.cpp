@@ -20,7 +20,7 @@ Image::~Image() {
 }
 
 void Image::move(int x, int y) {
-    lprintf("Moving image to (%d, %d).", x, y);
+    // lprintf("Moving image to (%d, %d).", x, y);
     *this->dstRect = { x, y, 0, 0 };
 }
 
@@ -29,6 +29,6 @@ void Image::clip(int x, int y, int w, int h) {
 }
 
 void Image::blitOnSurface(SDL_Surface *dstSurface) {
-    lprintf("Blitted image on surface at (%d, %d).\n", dstRect->x, dstRect->y);
+    // lprintf("Blitted image on surface at (%d, %d).\n", dstRect->x, dstRect->y);
     SDL_BlitSurface(surface, clipRect, dstSurface, dstRect);
 }
