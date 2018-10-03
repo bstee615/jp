@@ -6,11 +6,12 @@ and may not be redistributed without written permission.*/
 #include <cstdlib>
 #include <getopt.h>
 #include "log.h"
-#include "gamemanager.h"
+#include "gameview.h"
 
 //Screen dimension constants
 static int SCREEN_WIDTH = 640;
 static int SCREEN_HEIGHT = 480;
+static int FPS = 32;
 
 void processArgs(int argc, char **argv)
 {
@@ -18,17 +19,16 @@ void processArgs(int argc, char **argv)
     extern char *optarg;
     extern int optopt;
 
-    int default_size = 1;
-
-    while ((c = getopt(argc, argv, "w:h:")) != -1) {
+    while ((c = getopt(argc, argv, "w:h:f:")) != -1) {
         switch(c) {
         case 'w':
             SCREEN_WIDTH = atoi(optarg);
-            default_size = 0;
             break;
         case 'h':
             SCREEN_HEIGHT = atoi(optarg);
-            default_size = 0;
+            break;
+        case 'f':
+            FPS = atoi(optarg);
             break;
         case '?':
             lprintf("unknown arg %c\n", optopt);
@@ -36,9 +36,8 @@ void processArgs(int argc, char **argv)
         }
     }
 
-    if (default_size) {
-        lprintf("Setting window size to default 800x600.\n");
-    }
+    lprintf("Setting window size to %dx%d.\n", SCREEN_WIDTH, SCREEN_HEIGHT);
+    lprintf("Setting FPS to %d.\n", FPS);
 }
 
 void close()
@@ -52,9 +51,9 @@ int main( int argc, char** argv )
     start_log();
     processArgs(argc, argv);
 
-    GameManager *manager = new GameManager(SCREEN_WIDTH, SCREEN_HEIGHT);
-    manager->loadImage("hello_world.bmp");
-    manager->loop();
+    GameView *manager = new GameView(SCREEN_WIDTH, SCREEN_HEIGHT);
+    manager->loadImage("images/hello_world.bmp");
+    manager->loop(1000 / FPS);
 
     delete manager;
 
