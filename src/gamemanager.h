@@ -5,12 +5,12 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
+#include <unordered_map>
 #include "gameobject.h"
-#include <vector>
 
 class GameManager {
-    std::vector<GameObject*> objects;
-    unsigned int g_id;
+    std::unordered_map<id_t, GameObject*> objects;
+    id_t g_id;
 
 public:
     GameManager();

@@ -19,9 +19,14 @@ Image::~Image() {
     surface = NULL;
 }
 
-void Image::move(int x, int y) {
+void Image::moveTo(int x, int y) {
     // lprintf("Moving image to (%d, %d).", x, y);
     *this->dstRect = { x, y, 0, 0 };
+}
+
+void Image::moveTo(Point p) {
+    // lprintf("Moving image to (%d, %d).", x, y);
+    *this->dstRect = { (int)p.x, (int)p.y, 0, 0 };
 }
 
 void Image::clip(int x, int y, int w, int h) {

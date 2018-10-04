@@ -2,6 +2,7 @@
 #define IMAGE_H
 
 #include <SDL.h>
+#include "point.h"
 
 class Image {
     SDL_Rect *dstRect = NULL;
@@ -12,7 +13,8 @@ public:
     Image(const char *path);
     virtual ~Image();
 
-    void move(int x, int y);
+    void moveTo(int x, int y);
+    void moveTo(Point p);
 
     void clip(int x, int y, int w, int h);
 

@@ -46,15 +46,15 @@ void close()
     close_log();
 }
 
-int main( int argc, char** argv )
+int main(int argc, char** argv)
 {
     start_log();
     processArgs(argc, argv);
 
-    GameView *manager = new GameView(SCREEN_WIDTH, SCREEN_HEIGHT);
-    manager->loop(1000 / FPS);
+    GameView *gameView = new GameView(SCREEN_WIDTH, SCREEN_HEIGHT);
+    gameView->loop(1000 / FPS);
 
-    delete manager;
+    delete gameView;
 
     close();
 

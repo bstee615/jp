@@ -1,6 +1,5 @@
 #include "gameview.h"
 #include <ctime>
-#include <thread>
 
 GameView::GameView(int w, int h) {
     model = new GameManager();
@@ -38,11 +37,12 @@ void GameView::loop(int duration_ms) {
 void GameView::update() {
     // lprintf("U: %d D: %d L: %d R: %d\n", keys.up, keys.down, keys.left, keys.right);
     Point delta;
-    if (keys.up) { delta.y --; }
-    if (keys.down) { delta.y ++; }
-    if (keys.left) { delta.x --; }
-    if (keys.right) { delta.x ++; }
-    obj->rect.moveBy(delta);
+    float speed = 100;
+    if (keys.up) { delta.y -= speed; }
+    if (keys.down) { delta.y += speed; }
+    if (keys.left) { delta.x -= speed; }
+    if (keys.right) { delta.x += speed; }
+    obj->moveBy(delta);
 }
 
 void GameView::pollEvents() {

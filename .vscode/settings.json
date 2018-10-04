@@ -40,6 +40,12 @@
         "xmemory0": "cpp",
         "xstddef": "cpp",
         "xtr1common": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "list": "cpp",
+        "memory": "cpp",
+        "map": "cpp",
+        "xthread": "cpp",
+        "xhash": "cpp",
+        "xtree": "cpp"
     }
 }

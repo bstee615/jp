@@ -9,13 +9,21 @@
 
 #include "rect.h"
 
-class GameObject {
-    unsigned int id;
-public:
-    Rect rect;
+typedef unsigned int id_t;
 
-    GameObject(unsigned int _id);
-    GameObject(unsigned int _id, int x, int y, int x_size, int y_size);
+class GameObject {
+    id_t id;
+    Rect rect;
+public:
+    const Point &pos;
+    const Point &size;
+
+    GameObject(id_t _id);
+    GameObject(id_t _id, int x, int y, int x_size, int y_size);
+
+    // Moves the centerpoint of this rect and returns the new center Point.
+    void moveBy(float x, float y);
+    void moveBy(Point p);
 };
 
 #endif
