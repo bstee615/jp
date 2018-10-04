@@ -17,7 +17,6 @@ Image *ImageCollection::addImage(Image *img) {
 }
 
 Image *ImageCollection::loadImage(const char *path) {
-    lprintf("Loading %s.\n", path);
     return addImage(new Image(path));
 }
 

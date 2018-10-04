@@ -6,9 +6,9 @@
 #include "image.h"
 
 class ImageCollection {
+public:
     std::vector<Image *> images;
 
-public:
     ImageCollection();
     ~ImageCollection();
 

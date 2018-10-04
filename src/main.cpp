@@ -52,7 +52,6 @@ int main( int argc, char** argv )
     processArgs(argc, argv);
 
     GameView *manager = new GameView(SCREEN_WIDTH, SCREEN_HEIGHT);
-    manager->loadImage("images/hello_world.bmp");
     manager->loop(1000 / FPS);
 
     delete manager;

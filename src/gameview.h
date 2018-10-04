@@ -1,10 +1,12 @@
-#ifndef GAMEMANAGER_H
-#define GAMEMANAGER_H
+#ifndef GAMEVIEW_H
+#define GAMEVIEW_H
 
 #include "log.h"
 #include "window.h"
 #include "image.h"
 #include "imagecollection.h"
+#include "gamemanager.h"
+#include "gameimage.h"
 
 class GameView {
     typedef struct Keys {
@@ -14,11 +16,15 @@ class GameView {
         bool right;
     } Keys;
 
+    GameManager *model;
     ImageCollection *images;
     Window *window;
     Keys keys;
 
     bool quit;
+
+    // Testing code
+    GameObject *obj;
 
 public:
     GameView(int w, int h);
@@ -32,7 +38,9 @@ public:
 
     void handleKeyDown(SDL_Event &e);
     void handleKeyUp(SDL_Event &e);
-    void loadImage(const char *path);
+    Image *loadImage(const char *path);
+    GameImage *loadImageToModel(const char *path, GameObject *obj);
+    void updateGameImagesToModel();
 };
 
 #endif

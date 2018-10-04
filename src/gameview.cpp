@@ -3,12 +3,18 @@
 #include <thread>
 
 GameView::GameView(int w, int h) {
+    model = new GameManager();
     images = new ImageCollection();
     window = new Window("JetPack", w, h);
     keys = { 0, 0, 0, 0 };
+
+    // Testing code
+    obj = model->addGameObject(10, 0, 100, 100);
+    loadImageToModel("images/hello_world.bmp", obj);
 }
 
 GameView::~GameView() {
+    delete model;
     delete images;
     delete window;
 }
@@ -30,7 +36,13 @@ void GameView::loop(int duration_ms) {
 }
 
 void GameView::update() {
-    lprintf("U: %d D: %d L: %d R: %d\n", keys.up, keys.down, keys.left, keys.right);
+    // lprintf("U: %d D: %d L: %d R: %d\n", keys.up, keys.down, keys.left, keys.right);
+    Point delta;
+    if (keys.up) { delta.y --; }
+    if (keys.down) { delta.y ++; }
+    if (keys.left) { delta.x --; }
+    if (keys.right) { delta.x ++; }
+    obj->rect.moveBy(delta);
 }
 
 void GameView::pollEvents() {
@@ -54,6 +66,9 @@ void GameView::pollEvents() {
 }
 
 void GameView::render() {
+    updateGameImagesToModel();
+    
+    SDL_FillRect(window->screenSurface, NULL, SDL_MapRGB(window->screenSurface->format, 0xFF, 0x00, 0x00));
     images->blitAllImagesOnSurface(window->screenSurface);
     window->updateSurface();
 }
@@ -112,6 +127,23 @@ void GameView::handleKeyUp(SDL_Event &e) {
     }
 }
 
-void GameView::loadImage(const char *path) {
-    images->loadImage(path);
+void GameView::updateGameImagesToModel() {
+    for (auto it : images->images) {
+        GameImage *gi = dynamic_cast<GameImage*>(it);
+        if (gi != nullptr) {
+            gi->updateToModel();
+        }
+    }
+}
+
+Image *GameView::loadImage(const char *path) {
+    return images->loadImage(path);
+}
+
+GameImage *GameView::loadImageToModel(const char *path, GameObject *obj) {
+    Image *img = new Image(path);
+    GameImage *gi = new GameImage(img);
+    images->addImage(gi);
+    gi->obj = obj;
+    return gi;
 }

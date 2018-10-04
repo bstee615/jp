@@ -10,7 +10,7 @@ class Image {
 
 public:
     Image(const char *path);
-    ~Image();
+    virtual ~Image();
 
     void move(int x, int y);
 
