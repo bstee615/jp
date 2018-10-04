@@ -11,7 +11,7 @@ and may not be redistributed without written permission.*/
 //Screen dimension constants
 static int SCREEN_WIDTH = 640;
 static int SCREEN_HEIGHT = 480;
-static int FPS = 32;
+static int FPS = 100;
 
 void processArgs(int argc, char **argv)
 {

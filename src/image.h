@@ -2,6 +2,7 @@
 #define IMAGE_H
 
 #include <SDL.h>
+#include "rect.h"
 #include "point.h"
 
 class Image {
@@ -17,6 +18,7 @@ public:
     void moveTo(Point p);
 
     void clip(int x, int y, int w, int h);
+    void clip(Point p);
 
     void blitOnSurface(SDL_Surface *surface);
 };

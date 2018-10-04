@@ -8,8 +8,9 @@ GameView::GameView(int w, int h) {
     keys = { 0, 0, 0, 0 };
 
     // Testing code
-    obj = model->addGameObject(10, 0, 100, 100);
-    loadImageToModel("images/hello_world.bmp", obj);
+    lprintf("Testing GameImage and GameObject.\n");
+    obj = model->addGameObject(10, 0, 30, 30);
+    loadImageToModel("images/smile.bmp", obj);
 }
 
 GameView::~GameView() {
@@ -37,7 +38,7 @@ void GameView::loop(int duration_ms) {
 void GameView::update() {
     // lprintf("U: %d D: %d L: %d R: %d\n", keys.up, keys.down, keys.left, keys.right);
     Point delta;
-    float speed = 100;
+    float speed = 10;
     if (keys.up) { delta.y -= speed; }
     if (keys.down) { delta.y += speed; }
     if (keys.left) { delta.x -= speed; }
@@ -140,10 +141,8 @@ Image *GameView::loadImage(const char *path) {
     return images->loadImage(path);
 }
 
-GameImage *GameView::loadImageToModel(const char *path, GameObject *obj) {
-    Image *img = new Image(path);
-    GameImage *gi = new GameImage(img);
+GameImage *GameView::loadImageToModel(const char *path, GameObject *obj) {    
+    GameImage *gi = new GameImage(path, obj);
     images->addImage(gi);
-    gi->obj = obj;
     return gi;
 }

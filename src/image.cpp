@@ -6,6 +6,8 @@ Image::Image(const char *path) {
     dstRect->x = 0;
     dstRect->y = 0;
 
+    clipRect = new SDL_Rect();
+
     lprintf("Loading path %s.\n", path);
     surface = SDL_LoadBMP(path);
     if( surface == NULL )
@@ -21,16 +23,20 @@ Image::~Image() {
 
 void Image::moveTo(int x, int y) {
     // lprintf("Moving image to (%d, %d).", x, y);
-    *this->dstRect = { x, y, 0, 0 };
+    *dstRect = { x, y, 0, 0 };
 }
 
 void Image::moveTo(Point p) {
     // lprintf("Moving image to (%d, %d).", x, y);
-    *this->dstRect = { (int)p.x, (int)p.y, 0, 0 };
+    *dstRect = { (int)p.x, (int)p.y, 0, 0 };
 }
 
 void Image::clip(int x, int y, int w, int h) {
-    *this->clipRect = { x, y, w, h };
+    *clipRect = { x, y, w, h };
+}
+
+void Image::clip(Point p) {
+    clip(0, 0, (int)(p.x * 4), (int)(p.y * 4));
 }
 
 void Image::blitOnSurface(SDL_Surface *dstSurface) {
