@@ -2,7 +2,7 @@
 #include <ctime>
 
 GameView::GameView(int w, int h) {
-    model = new GameManager();
+    model = new GameManager(0, 0, w, h);
     images = new ImageCollection();
     window = new Window("JetPack", w, h);
     keys = { 0, 0, 0, 0 };
@@ -43,7 +43,9 @@ void GameView::update() {
     if (keys.down) { delta.y += speed; }
     if (keys.left) { delta.x -= speed; }
     if (keys.right) { delta.x += speed; }
-    obj->moveBy(delta);
+    obj->scheduleMoveBy(delta);
+
+    model->updateGrid();
 }
 
 void GameView::pollEvents() {
