@@ -5,7 +5,7 @@
 #include "window.h"
 #include "image.h"
 #include "imagecollection.h"
-#include "gamemanager.h"
+#include "gameobjectcollection.h"
 #include "gameimage.h"
 
 class GameView {
@@ -16,7 +16,7 @@ class GameView {
         bool right;
     } Keys;
 
-    GameManager *model;
+    GameObjectCollection *model;
     ImageCollection *images;
     Window *window;
     Keys keys;

@@ -2,7 +2,7 @@
 
 GameObject::GameObject(unsigned int _id, int x, int y, int x_size, int y_size):
     id(_id), rect(Rect(Point(x, y), Point(x_size, y_size))),
-    pos(rect.pos), size(rect.size), action(new GameObjectAction()) { }
+    visible(_visible), pos(rect.pos), size(rect.size), action(new GameObjectAction()) { }
 
 GameObject::GameObject(unsigned int id): GameObject(id, 0, 0, 0, 0) { }
 

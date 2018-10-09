@@ -14,9 +14,11 @@ GameImage::GameImage(const char *path): GameImage(new Image(path)) { }
 GameImage::GameImage(const char *path, GameObject *_obj): GameImage(new Image(path), _obj) { }
 
 void GameImage::updateToModel() {
-    Point pos = obj->pos;
-    Point size = obj->size;
-    moveTo(pos - (size / 2));
+    if (obj->visible) {
+        Point pos = obj->pos;
+        Point size = obj->size;
+        moveTo(pos - (size / 2));
+    }
 }
 
 GameObject *GameImage::getObject() {
@@ -26,4 +28,10 @@ GameObject *GameImage::getObject() {
 void GameImage::setObject(GameObject *obj) {
     this->obj = obj;
     clip(obj->size);
+}
+
+void GameImage::blitOnSurface(SDL_Surface *dstSurface) {
+    if (obj->visible) {
+        Image::blitOnSurface(dstSurface);
+    }
 }

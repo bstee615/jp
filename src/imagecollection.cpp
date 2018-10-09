@@ -23,7 +23,6 @@ Image *ImageCollection::loadImage(const char *path) {
 void ImageCollection::blitAllImagesOnSurface(SDL_Surface *dstSurface) {
     // lprintf("Blitting %d images.\n", images.size());
     for (size_t i = 0; i < images.size(); i ++) {
-        // lprintf("Blitting image %d.\n", i);
         images.at(i)->blitOnSurface(dstSurface);
     }
 }

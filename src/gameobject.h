@@ -18,7 +18,10 @@ class GameObject {
     id_t id;
     Rect rect;
 
+    bool _visible = true;
+
 public:
+    const bool &visible;
     const Point &pos;
     const Point &size;
 
@@ -34,6 +37,9 @@ public:
     void moveBy(const Point &p);
 
     void scheduleAction(GameObjectAction *action);
+    
+    void show() { _visible = true; }
+    void hide() { _visible = false; }
 };
 
 #endif

@@ -34,6 +34,9 @@ public:
     Rect(Pos pos, float h_size, float v_size):
         Rect(pos, Size(h_size, v_size)) { }
 
+    Rect(float x_pos, float y_pos, float h_size, float v_size):
+        Rect(Pos(x_pos, y_pos), Size(h_size, v_size)) { }
+
     Rect(const Rect &r) {
         pos = r.pos;
         size = r.size;
@@ -67,17 +70,49 @@ public:
     Point getCorner(Corner c) {
         switch (c) {
             case TOP_RIGHT:
-                return pos + size;
-            case TOP_LEFT:
-                return pos + size.inverseX();
-            case BOTTOM_LEFT:
-                return pos + size.inverse();
-            case BOTTOM_RIGHT:
                 return pos + size.inverseY();
+            case TOP_LEFT:
+                return pos + size.inverse();
+            case BOTTOM_LEFT:
+                return pos + size.inverseX();
+            case BOTTOM_RIGHT:
+                return pos + size;
             default:
                 lprintf("Error: invalid corner %d.\n", c);
                 return Point();
         }
+    }
+    
+    bool contains(Point p) {
+        Point top_left = getCorner(TOP_LEFT);
+        Point bottom_right = getCorner(BOTTOM_RIGHT);
+        return !(p.x < top_left.x ||
+                p.y < top_left.y ||
+                p.x >= bottom_right.x ||
+                p.y >= bottom_right.y);
+    }
+    
+    Point correction(Point p) {
+        Point top_left = getCorner(TOP_LEFT);
+        Point bottom_right = getCorner(BOTTOM_RIGHT);
+
+        Point ret;
+        if (p.x < top_left.x) {
+            ret.x = top_left.x - p.x;
+        }
+        else if (p.x > bottom_right.x) {
+            ret.x = bottom_right.x - p.x;
+        }
+
+        if (p.y < top_left.y) {
+            ret.y = top_left.y - p.y;
+        }
+        else if (p.y > bottom_right.y) {
+            ret.y = bottom_right.y - p.y;
+        }
+        // lprintf("correction: (%f, %f)\n", ret.x, ret.y);
+
+        return ret;
     }
 };
 

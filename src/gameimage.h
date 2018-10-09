@@ -18,6 +18,8 @@ public:
     void updateToModel();
     GameObject *getObject();
     void setObject(GameObject *obj);
+    
+    void blitOnSurface(SDL_Surface *surface);
 };
 
 #endif

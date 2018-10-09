@@ -67,7 +67,7 @@ public:
     }
 
     Point inverseY() {
-        return Point(-x, y);
+        return Point(x, -y);
     }
 
     Point inverse() {

@@ -3,7 +3,7 @@
 #include "gameobjectmovebyaction.h"
 
 GameView::GameView(int w, int h) {
-    model = new GameManager(100, 100, 100, 100);
+    model = new GameObjectCollection(50, 50, 200, 200);
     images = new ImageCollection();
     window = new Window("JetPack", w, h);
     keys = { 0, 0, 0, 0 };
@@ -137,13 +137,7 @@ void GameView::updateGameImagesToModel() {
     for (auto it : images->images) {
         GameImage *gi = dynamic_cast<GameImage*>(it);
         if (gi != nullptr) {
-            if (model->isInsideBounds(gi->getObject())) {
-                gi->updateToModel();
-                gi->show();
-            }
-            else {
-                gi->hide();
-            }
+            gi->updateToModel();
         }
     }
 }
