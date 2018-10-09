@@ -1,11 +1,11 @@
 #include "gamemanager.h"
-#include <algorithm>
 
 GameManager::GameManager(int _x, int _y, int _w, int _h):
     objects(std::unordered_map<id_t, GameObject*>()),
     x_axis(std::vector<GameObject*>(_w, nullptr)),
     y_axis(std::vector<GameObject*>(_h, nullptr)),
     x(_x), y(_y) {
+    lprintf("Setting chunk position to (%d, %d) and size to %dx%d.\n", _x, _y, _w, _h);
 }
 
 GameObject *GameManager::addGameObject(int x, int y, int x_size, int y_size) {
@@ -40,8 +40,8 @@ void GameManager::setObjectAtPosition(Point p, GameObject *obj) {
         return;
     }
     
-    x_axis.at(p.x) = obj;
-    y_axis.at(p.y) = obj;
+    x_axis.at(p.x - getX()) = obj;
+    y_axis.at(p.y - getY()) = obj;
 }
 
 bool GameManager::isInsideBounds(Point p) {
@@ -54,5 +54,6 @@ bool GameManager::isInsideBounds(Point p) {
 }
 
 bool GameManager::isInsideBounds(GameObject *obj) {
-    return std::find(x_axis.begin(), x_axis.end(), obj) != x_axis.end();
+    return isInsideBounds(obj->pos);
+    // return std::find(x_axis.begin(), x_axis.end(), obj) != x_axis.end();
 }

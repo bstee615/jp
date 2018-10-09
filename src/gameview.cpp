@@ -3,7 +3,7 @@
 #include "gameobjectmovebyaction.h"
 
 GameView::GameView(int w, int h) {
-    model = new GameManager(0, 0, w, h);
+    model = new GameManager(100, 100, 100, 100);
     images = new ImageCollection();
     window = new Window("JetPack", w, h);
     keys = { 0, 0, 0, 0 };
@@ -39,7 +39,7 @@ void GameView::loop(int duration_ms) {
 void GameView::update() {
     // lprintf("U: %d D: %d L: %d R: %d\n", keys.up, keys.down, keys.left, keys.right);
     Point delta;
-    float speed = 10;
+    float speed = 2;
     if (keys.up) { delta.y -= speed; }
     if (keys.down) { delta.y += speed; }
     if (keys.left) { delta.x -= speed; }
@@ -72,7 +72,9 @@ void GameView::pollEvents() {
 void GameView::render() {
     updateGameImagesToModel();
     
-    SDL_FillRect(window->screenSurface, NULL, SDL_MapRGB(window->screenSurface->format, 0xFF, 0x00, 0x00));
+    SDL_FillRect(window->screenSurface, NULL, SDL_MapRGB(window->screenSurface->format, 24, 206, 106));
+    SDL_Rect rect = { model->getX(), model->getY(), model->getW(), model->getH() };
+    SDL_FillRect(window->screenSurface, &rect, SDL_MapRGB(window->screenSurface->format, 11, 96, 50));
     images->blitAllImagesOnSurface(window->screenSurface);
     window->updateSurface();
 }
@@ -137,10 +139,10 @@ void GameView::updateGameImagesToModel() {
         if (gi != nullptr) {
             if (model->isInsideBounds(gi->getObject())) {
                 gi->updateToModel();
-                // gi->show();
+                gi->show();
             }
             else {
-                // gi->hide();
+                gi->hide();
             }
         }
     }

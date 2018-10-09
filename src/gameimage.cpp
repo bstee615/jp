@@ -1,4 +1,5 @@
 #include "gameimage.h"
+#include "log.h"
 
 GameImage::GameImage(Image *_img): Image(*_img) {
 }
@@ -13,7 +14,9 @@ GameImage::GameImage(const char *path): GameImage(new Image(path)) { }
 GameImage::GameImage(const char *path, GameObject *_obj): GameImage(new Image(path), _obj) { }
 
 void GameImage::updateToModel() {
-    moveTo(obj->pos);
+    Point pos = obj->pos;
+    Point size = obj->size;
+    moveTo(pos - (size / 2));
 }
 
 GameObject *GameImage::getObject() {

@@ -46,6 +46,8 @@
         "map": "cpp",
         "xthread": "cpp",
         "xhash": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "deque": "cpp",
+        "algorithm": "cpp"
     }
 }

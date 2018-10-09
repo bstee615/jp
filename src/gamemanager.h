@@ -7,6 +7,8 @@
 
 #include <unordered_map>
 #include <vector>
+#include <algorithm>
+#include "log.h"
 #include "gameobject.h"
 #include "point.h"
 

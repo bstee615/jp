@@ -11,6 +11,14 @@ class Point {
     Point plus(const Point &p) {
         return Point(x + p.x, y + p.y);
     }
+    
+    Point minus(const Point &p) {
+        return Point(x - p.x, y - p.y);
+    }
+    
+    Point div(const int &scalar) {
+        return Point(x / scalar, y / scalar);
+    }
 
 public:
     float x, y;
@@ -38,12 +46,20 @@ public:
         return plus(p);
     }
 
+    Point operator- (const Point &p) {
+        return minus(p);
+    }
+
     bool operator>= (const float scalar) {
         return x >= scalar && y >= scalar;
     }
 
     bool operator== (const Point &p) {
         return x == p.x && y == p.y;
+    }
+
+    Point operator/ (const int &scalar) {
+        return div(scalar);
     }
 
     Point inverseX() {
