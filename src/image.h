@@ -10,6 +10,8 @@ class Image {
     SDL_Rect *clipRect = NULL;
     SDL_Surface *surface = NULL;
 
+    bool visible = true;
+
 public:
     Image(const char *path);
     virtual ~Image();
@@ -21,6 +23,9 @@ public:
     void clip(Point p);
 
     void blitOnSurface(SDL_Surface *surface);
+
+    void show();
+    void hide();
 };
 
 #endif

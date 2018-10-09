@@ -40,6 +40,15 @@ void Image::clip(Point p) {
 }
 
 void Image::blitOnSurface(SDL_Surface *dstSurface) {
-    // lprintf("Blitted image on surface at (%d, %d).\n", dstRect->x, dstRect->y);
-    SDL_BlitSurface(surface, clipRect, dstSurface, dstRect);
+    if (visible) {
+        SDL_BlitSurface(surface, clipRect, dstSurface, dstRect);
+    }
+}
+
+void Image::show() {
+    visible = true;
+}
+
+void Image::hide() {
+    visible = false;
 }

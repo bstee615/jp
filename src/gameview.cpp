@@ -1,5 +1,6 @@
 #include "gameview.h"
 #include <ctime>
+#include "gameobjectmovebyaction.h"
 
 GameView::GameView(int w, int h) {
     model = new GameManager(0, 0, w, h);
@@ -9,7 +10,7 @@ GameView::GameView(int w, int h) {
 
     // Testing code
     lprintf("Testing GameImage and GameObject.\n");
-    obj = model->addGameObject(10, 0, 30, 30);
+    obj = model->addGameObject(100, 100, 30, 30);
     loadImageToModel("images/smile.bmp", obj);
 }
 
@@ -43,7 +44,7 @@ void GameView::update() {
     if (keys.down) { delta.y += speed; }
     if (keys.left) { delta.x -= speed; }
     if (keys.right) { delta.x += speed; }
-    obj->scheduleMoveBy(delta);
+    obj->scheduleAction(new GameObjectMoveByAction(obj, delta));
 
     model->updateGrid();
 }
@@ -134,7 +135,13 @@ void GameView::updateGameImagesToModel() {
     for (auto it : images->images) {
         GameImage *gi = dynamic_cast<GameImage*>(it);
         if (gi != nullptr) {
-            gi->updateToModel();
+            if (model->isInsideBounds(gi->getObject())) {
+                gi->updateToModel();
+                // gi->show();
+            }
+            else {
+                // gi->hide();
+            }
         }
     }
 }

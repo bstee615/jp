@@ -1,7 +1,8 @@
 #include "gameobject.h"
 
 GameObject::GameObject(unsigned int _id, int x, int y, int x_size, int y_size):
-    action(new GameObjectAction()), id(_id), rect(Rect(Point(x, y), Point(x_size, y_size))), pos(rect.pos), size(rect.size) { }
+    id(_id), rect(Rect(Point(x, y), Point(x_size, y_size))),
+    pos(rect.pos), size(rect.size), action(new GameObjectAction()) { }
 
 GameObject::GameObject(unsigned int id): GameObject(id, 0, 0, 0, 0) { }
 
@@ -16,7 +17,7 @@ void GameObject::moveBy(const Point &p) {
     rect.pos += p;
 }
 
-void GameObject::scheduleMoveBy(Point p) {
+void GameObject::scheduleAction(GameObjectAction *_action) {
     delete action;
-    action = new GameObjectMoveByAction(this, p);
+    action = _action;
 }

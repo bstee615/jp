@@ -16,6 +16,7 @@ public:
     GameImage &operator= (const Image &img);
 
     void updateToModel();
+    GameObject *getObject();
     void setObject(GameObject *obj);
 };
 

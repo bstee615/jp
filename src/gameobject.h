@@ -7,9 +7,9 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
+#include "point.h"
 #include "rect.h"
 #include "gameobjectaction.h"
-#include "gameobjectmovebyaction.h"
 
 typedef unsigned int id_t;
 typedef GameObjectAction Action;
@@ -33,7 +33,7 @@ public:
     void moveBy(float x, float y);
     void moveBy(const Point &p);
 
-    void scheduleMoveBy(Point p);
+    void scheduleAction(GameObjectAction *action);
 };
 
 #endif
