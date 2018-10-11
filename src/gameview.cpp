@@ -1,12 +1,14 @@
 #include "gameview.h"
-#include <ctime>
 #include "gameobjectmovebyaction.h"
+#include "gameobjectmovetoaction.h"
+#include <ctime>
 
 GameView::GameView(int w, int h) {
-    model = new GameObjectCollection(50, 50, 200, 200);
+    model = new GameObjectCollection(50, 50, w-100, h-100);
     images = new ImageCollection();
     window = new Window("JetPack", w, h);
     keys = { 0, 0, 0, 0 };
+    mouse = { 0, 0, false };
 
     // Testing code
     lprintf("Testing GameImage and GameObject.\n");
@@ -38,13 +40,23 @@ void GameView::loop(int duration_ms) {
 
 void GameView::update() {
     // lprintf("U: %d D: %d L: %d R: %d\n", keys.up, keys.down, keys.left, keys.right);
-    Point delta;
-    float speed = 2;
-    if (keys.up) { delta.y -= speed; }
-    if (keys.down) { delta.y += speed; }
-    if (keys.left) { delta.x -= speed; }
-    if (keys.right) { delta.x += speed; }
-    obj->scheduleAction(new GameObjectMoveByAction(obj, delta));
+    
+    if (mouse.leftButtonDown) {
+        Point size = obj->size;
+        const int cellSize = size.x;
+        obj->scheduleAction(new GameObjectMoveToAction(obj,
+            // Move in a grid
+            ((Point(mouse.x, mouse.y) / cellSize).floor() * cellSize) + size / 2));
+    }
+    else {
+        Point delta;
+        float speed = 5;
+        if (keys.up) { delta.y -= speed; }
+        if (keys.down) { delta.y += speed; }
+        if (keys.left) { delta.x -= speed; }
+        if (keys.right) { delta.x += speed; }
+        obj->scheduleAction(new GameObjectMoveByAction(obj, delta));
+    }
 
     model->updateGrid();
 }
@@ -65,6 +77,11 @@ void GameView::pollEvents() {
             case SDL_KEYUP:
                 handleKeyUp(e);
                 break;
+            case SDL_MOUSEMOTION:
+            case SDL_MOUSEBUTTONDOWN:
+            case SDL_MOUSEBUTTONUP:
+                handleMouseEvent(e);
+                break;
         }
     }
 }
@@ -73,10 +90,32 @@ void GameView::render() {
     updateGameImagesToModel();
     
     SDL_FillRect(window->screenSurface, NULL, SDL_MapRGB(window->screenSurface->format, 24, 206, 106));
-    SDL_Rect rect = { model->getX(), model->getY(), model->getW(), model->getH() };
+    Rect boundsRect = model->boundsRect;
+    SDL_Rect rect = { boundsRect.getX() - obj->size.x/2, boundsRect.getY() - obj->size.x/2, boundsRect.getW() + obj->size.x, boundsRect.getH() + obj->size.x };
     SDL_FillRect(window->screenSurface, &rect, SDL_MapRGB(window->screenSurface->format, 11, 96, 50));
     images->blitAllImagesOnSurface(window->screenSurface);
     window->updateSurface();
+}
+
+void GameView::handleMouseEvent(SDL_Event &e) {
+    int x, y;
+    SDL_GetMouseState( &x, &y );
+
+    mouse.x = x;
+    mouse.y = y;
+
+    switch (e.type) {
+        case SDL_MOUSEBUTTONDOWN:
+            mouse.leftButtonDown = true;
+            break;
+        case SDL_MOUSEBUTTONUP:
+            mouse.leftButtonDown = false;
+            break;
+        // case SDL_MOUSEMOTION: // No behavior for now
+        //     break;
+        default:
+            break;
+    }
 }
 
 void GameView::handleKeyDown(SDL_Event &e) {

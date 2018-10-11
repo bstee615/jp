@@ -12,16 +12,15 @@
 #define Pos Point
 #define Size Point
 
-// num_t is a signed integer or floating-point type.
+enum Corner {
+    TOP_RIGHT,
+    TOP_LEFT,
+    BOTTOM_LEFT,
+    BOTTOM_RIGHT
+};
+
 class Rect {
 public:
-    enum Corner {
-        TOP_RIGHT,
-        TOP_LEFT,
-        BOTTOM_LEFT,
-        BOTTOM_RIGHT
-    };
-
     Pos pos;
     // size.x and size.y are the horizontal and vertical size, respectively.
     Size size;
@@ -31,10 +30,10 @@ public:
         assert(size >= 0);
     }
 
-    Rect(Pos pos, float h_size, float v_size):
+    Rect(Pos pos, int h_size, int v_size):
         Rect(pos, Size(h_size, v_size)) { }
 
-    Rect(float x_pos, float y_pos, float h_size, float v_size):
+    Rect(int x_pos, int y_pos, int h_size, int v_size):
         Rect(Pos(x_pos, y_pos), Size(h_size, v_size)) { }
 
     Rect(const Rect &r) {
@@ -100,20 +99,25 @@ public:
         if (p.x < top_left.x) {
             ret.x = top_left.x - p.x;
         }
-        else if (p.x > bottom_right.x) {
+        else if (p.x >= bottom_right.x) {
             ret.x = bottom_right.x - p.x;
         }
 
         if (p.y < top_left.y) {
             ret.y = top_left.y - p.y;
         }
-        else if (p.y > bottom_right.y) {
+        else if (p.y >= bottom_right.y) {
             ret.y = bottom_right.y - p.y;
         }
         // lprintf("correction: (%f, %f)\n", ret.x, ret.y);
 
         return ret;
     }
+
+    int getX() { return (pos - size).x; }
+    int getY() { return (pos - size).y; }
+    int getW() { return (size * 2).x; }
+    int getH() { return (size * 2).y; }
 };
 
 #endif

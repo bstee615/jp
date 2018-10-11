@@ -5,6 +5,8 @@
 
 #ifndef POINT_H
 #define POINT_H
+#include <cmath>
+#include "log.h"
 
 // float is a signed integer or floating-point type.
 class Point {
@@ -16,8 +18,26 @@ class Point {
         return Point(x - p.x, y - p.y);
     }
     
+    Point times(const int &scalar) {
+        return Point(x * scalar, y * scalar);
+    }
+    
+    Point times(const Point &p) {
+        return Point(x * p.x, y * p.y);
+    }
+    
     Point div(const int &scalar) {
+        if (scalar == 0) lprintf("div by 0.\n");
         return Point(x / scalar, y / scalar);
+    }
+    
+    Point div(const Point &p) {
+        if (p.x == 0 || p.y == 0) lprintf("div by 0.\n");
+        return Point(x / p.x, y / p.y);
+    }
+    
+    Point mod(const int &modScalar) {
+        return Point((int)x % modScalar, (int)y % modScalar);
     }
 
 public:
@@ -50,16 +70,32 @@ public:
         return minus(p);
     }
 
-    bool operator>= (const float scalar) {
+    Point operator* (const Point &p) {
+        return times(p);
+    }
+
+    Point operator* (const int &scalar) {
+        return times(scalar);
+    }
+
+    Point operator/ (const Point &p) {
+        return div(p);
+    }
+
+    Point operator/ (const int &scalar) {
+        return div(scalar);
+    }
+
+    Point operator% (const int &modScalar) {
+        return mod(modScalar);
+    }
+
+    bool operator>= (const int scalar) {
         return x >= scalar && y >= scalar;
     }
 
     bool operator== (const Point &p) {
         return x == p.x && y == p.y;
-    }
-
-    Point operator/ (const int &scalar) {
-        return div(scalar);
     }
 
     Point inverseX() {
@@ -72,6 +108,22 @@ public:
 
     Point inverse() {
         return Point(-x, -y);
+    }
+
+    Point floor() {
+        return Point(x, y);
+    }
+
+    Point abs() {
+        return Point(std::abs(x), std::abs(y));
+    }
+
+    float magnitude() {
+        return std::sqrt(x * x + y * y);
+    }
+
+    Point normalized() {
+        return div(magnitude());
     }
 };
 

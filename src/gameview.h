@@ -16,15 +16,32 @@ class GameView {
         bool right;
     } Keys;
 
+    typedef struct Mouse {
+        int x, y;
+        bool leftButtonDown;
+    } Mouse;
+
     GameObjectCollection *model;
     ImageCollection *images;
     Window *window;
     Keys keys;
+    Mouse mouse;
 
     bool quit;
 
     // Testing code
     GameObject *obj;
+    
+    void update();
+    void pollEvents();
+    void render();
+
+    void handleMouseEvent(SDL_Event &e);
+    void handleKeyDown(SDL_Event &e);
+    void handleKeyUp(SDL_Event &e);
+    Image *loadImage(const char *path);
+    GameImage *loadImageToModel(const char *path, GameObject *obj);
+    void updateGameImagesToModel();
 
 public:
     GameView(int w, int h);
@@ -32,15 +49,6 @@ public:
 
     void show();
     void loop(int duration_ms);
-    void update();
-    void pollEvents();
-    void render();
-
-    void handleKeyDown(SDL_Event &e);
-    void handleKeyUp(SDL_Event &e);
-    Image *loadImage(const char *path);
-    GameImage *loadImageToModel(const char *path, GameObject *obj);
-    void updateGameImagesToModel();
 };
 
 #endif

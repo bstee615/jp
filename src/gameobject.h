@@ -35,6 +35,9 @@ public:
     // Moves the centerpoint of this rect and returns the new center Point.
     void moveBy(float x, float y);
     void moveBy(const Point &p);
+    
+    void moveTo(float x, float y);
+    void moveTo(const Point &p);
 
     void scheduleAction(GameObjectAction *action);
     

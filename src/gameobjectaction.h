@@ -12,10 +12,10 @@ protected:
 
 public:
     const ActionType type;
-    GameObjectAction();
-    virtual ~GameObjectAction();
+    GameObjectAction(): type(NOOP) { }
+    virtual ~GameObjectAction() { }
 
-    virtual void execute();
+    virtual void execute() { }
 };
 
 #endif

@@ -17,6 +17,13 @@ void GameObject::moveBy(const Point &p) {
     rect.pos += p;
 }
 
+void GameObject::moveTo(float x, float y) {
+    rect.pos = Point(x, y);
+}
+void GameObject::moveTo(const Point &p) {
+    rect.pos = p;
+}
+
 void GameObject::scheduleAction(GameObjectAction *_action) {
     delete action;
     action = _action;
