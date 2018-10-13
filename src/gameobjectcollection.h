@@ -13,9 +13,10 @@
 #include "point.h"
 
 enum GameObjectConstraintPolicy {
-    DISAPPEAR = (1 << 0),
-    CONSTRAIN = (1 << 1),
-    GRID =      (1 << 2)
+    DISAPPEAR =     (1 << 0),
+    CONSTRAIN =     (1 << 1),
+    GRID =          (1 << 2),
+    NOCONSTRAINT =  (0)
 };
 
 class GameObjectCollection {
@@ -27,6 +28,7 @@ class GameObjectCollection {
 
     GameObjectConstraintPolicy policy;
     void applyPolicy(GameObject *obj);
+    void applyAction(GameObject *obj);
 
 public:
     const Rect boundsRect;
@@ -40,6 +42,8 @@ public:
     bool isObjectInsideBounds(GameObject *obj);
     
     void setPolicy(int _policy);
+
+    GameObject *findObjectAtPoint(Point p);
 };
 
 #endif

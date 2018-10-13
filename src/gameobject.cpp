@@ -25,6 +25,8 @@ void GameObject::moveTo(const Point &p) {
 }
 
 void GameObject::scheduleAction(GameObjectAction *_action) {
-    delete action;
+    if (action != nullptr) {
+        delete action;
+    }
     action = _action;
 }

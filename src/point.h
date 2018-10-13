@@ -111,7 +111,7 @@ public:
     }
 
     Point floor() {
-        return Point(x, y);
+        return Point((int)x, (int)y);
     }
 
     Point abs() {

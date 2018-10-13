@@ -30,7 +30,8 @@ class GameView {
     bool quit;
 
     // Testing code
-    GameObject *obj;
+    GameObject *grabbedObj = nullptr;
+    Point gridSize;
     
     void update();
     void pollEvents();
@@ -42,6 +43,7 @@ class GameView {
     Image *loadImage(const char *path);
     GameImage *loadImageToModel(const char *path, GameObject *obj);
     void updateGameImagesToModel();
+    GameObject *findObjectAtPoint(Point p);
 
 public:
     GameView(int w, int h);

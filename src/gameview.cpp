@@ -12,8 +12,10 @@ GameView::GameView(int w, int h) {
 
     // Testing code
     lprintf("Testing GameImage and GameObject.\n");
-    obj = model->addGameObject(100, 100, 30, 30);
+    GameObject *obj = model->addGameObject(100, 100, 30, 30);
     loadImageToModel("images/smile.bmp", obj);
+
+    gridSize = Point(30, 30);
 }
 
 GameView::~GameView() {
@@ -41,21 +43,22 @@ void GameView::loop(int duration_ms) {
 void GameView::update() {
     // lprintf("U: %d D: %d L: %d R: %d\n", keys.up, keys.down, keys.left, keys.right);
     
-    if (mouse.leftButtonDown) {
-        Point size = obj->size;
-        const int cellSize = size.x;
-        obj->scheduleAction(new GameObjectMoveToAction(obj,
-            // Move in a grid
-            ((Point(mouse.x, mouse.y) / cellSize).floor() * cellSize) + size / 2));
-    }
-    else {
-        Point delta;
-        float speed = 5;
-        if (keys.up) { delta.y -= speed; }
-        if (keys.down) { delta.y += speed; }
-        if (keys.left) { delta.x -= speed; }
-        if (keys.right) { delta.x += speed; }
-        obj->scheduleAction(new GameObjectMoveByAction(obj, delta));
+    if (grabbedObj != nullptr) {
+        if (mouse.leftButtonDown) {
+            Point size = grabbedObj->size;
+            Rect rect = model->boundsRect;
+            grabbedObj->scheduleAction(new GameObjectMoveToAction(grabbedObj,
+                (Point(mouse.x, mouse.y) / gridSize).floor() * gridSize - size + rect.getCorner(TOP_LEFT)));
+        }
+        else {
+            Point delta;
+            float speed = 5;
+            if (keys.up) { delta.y -= speed; }
+            if (keys.down) { delta.y += speed; }
+            if (keys.left) { delta.x -= speed; }
+            if (keys.right) { delta.x += speed; }
+            grabbedObj->scheduleAction(new GameObjectMoveByAction(grabbedObj, delta));
+        }
     }
 
     model->updateGrid();
@@ -91,7 +94,7 @@ void GameView::render() {
     
     SDL_FillRect(window->screenSurface, NULL, SDL_MapRGB(window->screenSurface->format, 24, 206, 106));
     Rect boundsRect = model->boundsRect;
-    SDL_Rect rect = { boundsRect.getX() - obj->size.x/2, boundsRect.getY() - obj->size.x/2, boundsRect.getW() + obj->size.x, boundsRect.getH() + obj->size.x };
+    SDL_Rect rect = { boundsRect.getX() - gridSize.x/2, boundsRect.getY() - gridSize.x/2, boundsRect.getW() + gridSize.x, boundsRect.getH() + gridSize.x };
     SDL_FillRect(window->screenSurface, &rect, SDL_MapRGB(window->screenSurface->format, 11, 96, 50));
     images->blitAllImagesOnSurface(window->screenSurface);
     window->updateSurface();
@@ -100,16 +103,19 @@ void GameView::render() {
 void GameView::handleMouseEvent(SDL_Event &e) {
     int x, y;
     SDL_GetMouseState( &x, &y );
+    Point p = (Point(x, y) / gridSize).floor() * gridSize;
 
-    mouse.x = x;
-    mouse.y = y;
+    mouse.x = p.x;
+    mouse.y = p.y;
 
     switch (e.type) {
         case SDL_MOUSEBUTTONDOWN:
             mouse.leftButtonDown = true;
+            grabbedObj = model->findObjectAtPoint(p);
             break;
         case SDL_MOUSEBUTTONUP:
             mouse.leftButtonDown = false;
+            grabbedObj = nullptr;
             break;
         // case SDL_MOUSEMOTION: // No behavior for now
         //     break;

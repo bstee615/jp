@@ -19,18 +19,29 @@ GameObject *GameObjectCollection::addGameObject(int x, int y, int x_size, int y_
 void GameObjectCollection::updateGrid() {
     for (auto pair : objects) {
         GameObject *obj = pair.second;
-        switch (obj->action->type) {
-        case MOVE:
-            obj->action->execute();
-            applyPolicy(obj);
-            break;
-        default:
-            break;
+        if (obj->action != nullptr) {
+            switch (obj->action->type) {
+            case MOVE:
+                applyAction(obj);
+                applyPolicy(obj);
+                break;
+            default:
+                break;
+            }
         }
     }
 }
 
+void GameObjectCollection::applyAction(GameObject *obj) {
+    obj->action->execute();
+    delete obj->action;
+    obj->action = nullptr;
+}
+
 void GameObjectCollection::applyPolicy(GameObject *obj) {
+    if ((GameObjectConstraintPolicy)policy == GameObjectConstraintPolicy::NOCONSTRAINT) {
+        return;
+    }
     if (CHECKPOLICY(policy, GameObjectConstraintPolicy::CONSTRAIN)) {
         Rect r = boundsRect;
         Point pos = obj->pos;
@@ -63,4 +74,15 @@ bool GameObjectCollection::isPointInsideBounds(Point p) {
 
 bool GameObjectCollection::isObjectInsideBounds(GameObject *obj) {
     return isPointInsideBounds(obj->pos);
+}
+
+GameObject *GameObjectCollection::findObjectAtPoint(Point p) {
+    for (auto pair : objects) {
+        GameObject *obj = pair.second;
+        Point size = obj->size;
+        if (Rect(obj->pos, size/2).contains(p)) {
+            return obj;
+        }
+    }
+    return nullptr;
 }
