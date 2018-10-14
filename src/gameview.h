@@ -7,6 +7,7 @@
 #include "imagecollection.h"
 #include "gameobjectcollection.h"
 #include "gameimage.h"
+#include "gridmanager.h"
 
 class GameView {
     typedef struct Keys {
@@ -21,6 +22,7 @@ class GameView {
         bool leftButtonDown;
     } Mouse;
 
+    GridManager *gridManager;
     GameObjectCollection *model;
     ImageCollection *images;
     Window *window;
@@ -43,7 +45,6 @@ class GameView {
     Image *loadImage(const char *path);
     GameImage *loadImageToModel(const char *path, GameObject *obj);
     void updateGameImagesToModel();
-    GameObject *findObjectAtPoint(Point p);
 
 public:
     GameView(int w, int h);

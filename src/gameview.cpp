@@ -5,6 +5,7 @@
 
 GameView::GameView(int w, int h) {
     model = new GameObjectCollection(50, 50, w-100, h-100);
+    gridManager = new GridManager(30, model->boundsRect);
     images = new ImageCollection();
     window = new Window("JetPack", w, h);
     keys = { 0, 0, 0, 0 };
@@ -45,20 +46,18 @@ void GameView::update() {
     
     if (grabbedObj != nullptr) {
         if (mouse.leftButtonDown) {
-            Point size = grabbedObj->size;
-            Rect rect = model->boundsRect;
             grabbedObj->scheduleAction(new GameObjectMoveToAction(grabbedObj,
-                (Point(mouse.x, mouse.y) / gridSize).floor() * gridSize - size + rect.getCorner(TOP_LEFT)));
+                gridManager->correctObjectToGrid(Point(mouse.x, mouse.y))));
         }
-        else {
-            Point delta;
-            float speed = 5;
-            if (keys.up) { delta.y -= speed; }
-            if (keys.down) { delta.y += speed; }
-            if (keys.left) { delta.x -= speed; }
-            if (keys.right) { delta.x += speed; }
-            grabbedObj->scheduleAction(new GameObjectMoveByAction(grabbedObj, delta));
-        }
+        // else {
+        //     Point delta;
+        //     float speed = 5;
+        //     if (keys.up) { delta.y -= speed; }
+        //     if (keys.down) { delta.y += speed; }
+        //     if (keys.left) { delta.x -= speed; }
+        //     if (keys.right) { delta.x += speed; }
+        //     grabbedObj->scheduleAction(new GameObjectMoveByAction(grabbedObj, delta));
+        // }
     }
 
     model->updateGrid();
@@ -94,7 +93,12 @@ void GameView::render() {
     
     SDL_FillRect(window->screenSurface, NULL, SDL_MapRGB(window->screenSurface->format, 24, 206, 106));
     Rect boundsRect = model->boundsRect;
-    SDL_Rect rect = { boundsRect.getX() - gridSize.x/2, boundsRect.getY() - gridSize.x/2, boundsRect.getW() + gridSize.x, boundsRect.getH() + gridSize.x };
+    SDL_Rect rect = {   
+                        (int)(boundsRect.getX() - gridSize.x/2),
+                        (int)(boundsRect.getY() - gridSize.x/2),
+                        (int)(boundsRect.getW() + gridSize.x),
+                        (int)(boundsRect.getH() + gridSize.x)
+                    };
     SDL_FillRect(window->screenSurface, &rect, SDL_MapRGB(window->screenSurface->format, 11, 96, 50));
     images->blitAllImagesOnSurface(window->screenSurface);
     window->updateSurface();

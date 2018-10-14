@@ -6,9 +6,13 @@ GameObjectCollection::GameObjectCollection(int _x, int _y, int _w, int _h):
     objects(std::unordered_map<id_t, GameObject*>()),
     x(_x), y(_y), w(_w), h(_h),
     policy(GameObjectConstraintPolicy(GameObjectConstraintPolicy::CONSTRAIN)),
-    boundsRect(Rect(_x + _w/2, _y + _h/2, _w/2, _h/2)) { }
+    boundsRect(Rect(_x + _w/2, _y + _h/2, _w/2, _h/2))
+{
 
-GameObject *GameObjectCollection::addGameObject(int x, int y, int x_size, int y_size) {
+}
+
+GameObject *GameObjectCollection::addGameObject(int x, int y, int x_size, int y_size)
+{
     id_t current_id = g_id++;
     GameObject *object = new GameObject(current_id, x, y, x_size, y_size);
     objects[current_id] = object;
