@@ -3,11 +3,23 @@
 #include "gameobjectmovetoaction.h"
 #include <ctime>
 
+#include <SDL_image.h>
+void GameView::preloadSurfaces() {
+    preloadedSurfaces["select"] = IMG_Load("images/select.png");
+    if (preloadedSurfaces["select"] == NULL) {
+        lprintf("Error loading select.png. %s\n", IMG_GetError());
+    }
+    else {
+        lprintf("Loaded select.png.\n");
+    }
+}
+
 GameView::GameView(int w, int h) {
     model = new GameObjectCollection(50, 50, w-100, h-100);
-    gridManager = new GridManager(30, model->boundsRect);
     images = new ImageCollection();
     window = new Window("JetPack", w, h);
+    renderer = new Renderer(window);
+    renderer->setColor(255, 255, 255);
     keys = { 0, 0, 0, 0 };
     mouse = { 0, 0, false };
 
@@ -16,7 +28,8 @@ GameView::GameView(int w, int h) {
     GameObject *obj = model->addGameObject(100, 100, 30, 30);
     loadImageToModel("images/smile.bmp", obj);
 
-    gridSize = Point(30, 30);
+    gridManager = new GridManager(30, model->boundsRect);
+    preloadSurfaces();
 }
 
 GameView::~GameView() {
@@ -44,11 +57,16 @@ void GameView::loop(int duration_ms) {
 void GameView::update() {
     // lprintf("U: %d D: %d L: %d R: %d\n", keys.up, keys.down, keys.left, keys.right);
     
-    if (grabbedObj != nullptr) {
-        if (mouse.leftButtonDown) {
-            grabbedObj->scheduleAction(new GameObjectMoveToAction(grabbedObj,
-                gridManager->correctObjectToGrid(Point(mouse.x, mouse.y))));
-        }
+    if (selectedObj != nullptr) {
+
+
+        // Drag selectedObj with mouse.
+        // if (mouse.leftButtonDown) {
+        //     selectedObj->scheduleAction(new GameObjectMoveToAction(selectedObj,
+        //         gridManager->correctPointToGrid(Point(mouse.x, mouse.y))));
+        // }
+
+        // Move selectedObj with keyboard.
         // else {
         //     Point delta;
         //     float speed = 5;
@@ -56,7 +74,7 @@ void GameView::update() {
         //     if (keys.down) { delta.y += speed; }
         //     if (keys.left) { delta.x -= speed; }
         //     if (keys.right) { delta.x += speed; }
-        //     grabbedObj->scheduleAction(new GameObjectMoveByAction(grabbedObj, delta));
+        //     selectedObj->scheduleAction(new GameObjectMoveByAction(selectedObj, delta));
         // }
     }
 
@@ -93,21 +111,27 @@ void GameView::render() {
     
     SDL_FillRect(window->screenSurface, NULL, SDL_MapRGB(window->screenSurface->format, 24, 206, 106));
     Rect boundsRect = model->boundsRect;
-    SDL_Rect rect = {   
-                        (int)(boundsRect.getX() - gridSize.x/2),
-                        (int)(boundsRect.getY() - gridSize.x/2),
-                        (int)(boundsRect.getW() + gridSize.x),
-                        (int)(boundsRect.getH() + gridSize.x)
-                    };
+    SDL_Rect rect = { boundsRect.getX() - 15, boundsRect.getY() - 15, boundsRect.getW() + 30, boundsRect.getH() + 30 };
     SDL_FillRect(window->screenSurface, &rect, SDL_MapRGB(window->screenSurface->format, 11, 96, 50));
     images->blitAllImagesOnSurface(window->screenSurface);
+
+    if (selectedObj != nullptr) {
+        Point pos = selectedObj->pos;
+        Point size = selectedObj->size;
+        size = size / 2;
+        pos = pos - size;
+        SDL_Rect srcrect = { 0, 0, 30, 30 };
+        SDL_Rect dstrect = { pos.x, pos.y, 0, 0 };
+        SDL_BlitSurface(preloadedSurfaces["select"], &srcrect, window->screenSurface, &dstrect);
+    }
+    
     window->updateSurface();
 }
 
 void GameView::handleMouseEvent(SDL_Event &e) {
     int x, y;
     SDL_GetMouseState( &x, &y );
-    Point p = (Point(x, y) / gridSize).floor() * gridSize;
+    Point p = Point(x, y);
 
     mouse.x = p.x;
     mouse.y = p.y;
@@ -115,11 +139,23 @@ void GameView::handleMouseEvent(SDL_Event &e) {
     switch (e.type) {
         case SDL_MOUSEBUTTONDOWN:
             mouse.leftButtonDown = true;
-            grabbedObj = model->findObjectAtPoint(p);
+                if (selectedObj != nullptr) {
+                    if (model->findObjectAtPoint(Point(mouse.x, mouse.y)) == nullptr) {
+                        selectedObj->scheduleAction(new GameObjectMoveToAction(selectedObj,
+                            gridManager->correctPointToGrid(Point(mouse.x, mouse.y))));
+                    }
+                }
             break;
         case SDL_MOUSEBUTTONUP:
+            if (mouse.leftButtonDown) {
+                if (selectedObj == nullptr) {
+                    selectedObj = model->findObjectAtPoint(p);
+                }
+                else {
+                    selectedObj = nullptr;
+                }
+            }
             mouse.leftButtonDown = false;
-            grabbedObj = nullptr;
             break;
         // case SDL_MOUSEMOTION: // No behavior for now
         //     break;

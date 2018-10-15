@@ -6,9 +6,9 @@ TARGET_DIR = bin
 TARGET = $(TARGET_DIR)/game.exe
 
 INC = -Iinclude/SDL2 -Isrc
-LIB = -Llib/SDL2
+LIB = -Llib/SDL2_image -Llib/SDL2
 W_FLAGS = -Wall -Wextra
-L_FLAGS = -lmingw32 -lSDL2main -lSDL2
+L_FLAGS = -lmingw32 -lSDL2_image -lSDL2main -lSDL2
 C_FLAGS = -std=c++11
 ALL_FLAGS = $(INC) $(LIB) $(L_FLAGS) $(W_FLAGS) $(C_FLAGS)
 

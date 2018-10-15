@@ -12,6 +12,7 @@ class Image {
 
 public:
     Image(const char *path);
+    Image(SDL_Surface *surface);
     virtual ~Image();
 
     void moveTo(int x, int y);

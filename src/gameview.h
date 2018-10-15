@@ -7,7 +7,9 @@
 #include "imagecollection.h"
 #include "gameobjectcollection.h"
 #include "gameimage.h"
+#include "renderer.h"
 #include "gridmanager.h"
+#include <unordered_map>
 
 class GameView {
     typedef struct Keys {
@@ -22,18 +24,21 @@ class GameView {
         bool leftButtonDown;
     } Mouse;
 
-    GridManager *gridManager;
     GameObjectCollection *model;
     ImageCollection *images;
     Window *window;
+    Renderer *renderer;
     Keys keys;
     Mouse mouse;
 
     bool quit;
 
     // Testing code
-    GameObject *grabbedObj = nullptr;
-    Point gridSize;
+    GameObject *selectedObj = nullptr;
+    GridManager *gridManager;
+
+    std::unordered_map<const char*, SDL_Surface *> preloadedSurfaces;
+    void preloadSurfaces();
     
     void update();
     void pollEvents();
@@ -42,9 +47,12 @@ class GameView {
     void handleMouseEvent(SDL_Event &e);
     void handleKeyDown(SDL_Event &e);
     void handleKeyUp(SDL_Event &e);
+
+    GameObject *findObjectAtPoint(Point p);
+
     Image *loadImage(const char *path);
-    GameImage *loadImageToModel(const char *path, GameObject *obj);
     void updateGameImagesToModel();
+    GameImage *loadImageToModel(const char *path, GameObject *obj);
 
 public:
     GameView(int w, int h);

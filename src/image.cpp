@@ -16,6 +16,16 @@ Image::Image(const char *path) {
     }
 }
 
+Image::Image(SDL_Surface *surface) {
+    dstRect = new SDL_Rect();
+    dstRect->x = 0;
+    dstRect->y = 0;
+
+    clipRect = new SDL_Rect();
+
+    surface = surface;
+}
+
 Image::~Image() {
     SDL_FreeSurface(surface);
     surface = NULL;

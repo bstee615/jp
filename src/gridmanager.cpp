@@ -6,7 +6,7 @@ GridManager::GridManager(int size, const Rect &boundsRect):
 
 }
 
-Point GridManager::correctObjectToGrid(Point p) {
+Point GridManager::correctPointToGrid(Point p) {
     Rect rect = gridBoundsRect;
     return (p / grid_size).floor()
             * grid_size

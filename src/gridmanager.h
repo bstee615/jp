@@ -12,7 +12,7 @@ class GridManager {
 public:
     GridManager(int _size, const Rect &_boundsRect);
 
-    Point correctObjectToGrid(Point p);
+    Point correctPointToGrid(Point p);
 };
 
 #endif
