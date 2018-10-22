@@ -8,7 +8,6 @@
 #include "gameobjectcollection.h"
 #include "gameimage.h"
 #include "renderer.h"
-#include "gridmanager.h"
 #include <unordered_map>
 
 class GameView {
@@ -35,7 +34,6 @@ class GameView {
 
     // Testing code
     GameObject *selectedObj = nullptr;
-    GridManager *gridManager;
 
     std::unordered_map<const char*, SDL_Surface *> preloadedSurfaces;
     void preloadSurfaces();

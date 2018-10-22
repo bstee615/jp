@@ -31,14 +31,13 @@ class GameObjectCollection {
     void applyAction(GameObject *obj);
 
 public:
-    const Rect boundsRect;
+    Rect boundsRect;
 
     GameObjectCollection(int _x, int _y, int _w, int _h);
 
     GameObject *addGameObject(int x, int y, int w, int h);
     void updateGrid();
 
-    bool isPointInsideBounds(Point p);
     bool isObjectInsideBounds(GameObject *obj);
     
     void setPolicy(int _policy);

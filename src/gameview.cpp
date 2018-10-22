@@ -27,8 +27,8 @@ GameView::GameView(int w, int h) {
     lprintf("Testing GameImage and GameObject.\n");
     GameObject *obj = model->addGameObject(100, 100, 30, 30);
     loadImageToModel("images/smile.bmp", obj);
+    selectedObj  = obj;
 
-    gridManager = new GridManager(30, model->boundsRect);
     preloadSurfaces();
 }
 
@@ -57,26 +57,13 @@ void GameView::loop(int duration_ms) {
 void GameView::update() {
     // lprintf("U: %d D: %d L: %d R: %d\n", keys.up, keys.down, keys.left, keys.right);
     
-    if (selectedObj != nullptr) {
-
-
-        // Drag selectedObj with mouse.
-        // if (mouse.leftButtonDown) {
-        //     selectedObj->scheduleAction(new GameObjectMoveToAction(selectedObj,
-        //         gridManager->correctPointToGrid(Point(mouse.x, mouse.y))));
-        // }
-
-        // Move selectedObj with keyboard.
-        // else {
-        //     Point delta;
-        //     float speed = 5;
-        //     if (keys.up) { delta.y -= speed; }
-        //     if (keys.down) { delta.y += speed; }
-        //     if (keys.left) { delta.x -= speed; }
-        //     if (keys.right) { delta.x += speed; }
-        //     selectedObj->scheduleAction(new GameObjectMoveByAction(selectedObj, delta));
-        // }
-    }
+    Point delta;
+    float speed = 5;
+    if (keys.up) { delta.y -= speed; }
+    if (keys.down) { delta.y += speed; }
+    if (keys.left) { delta.x -= speed; }
+    if (keys.right) { delta.x += speed; }
+    selectedObj->scheduleAction(new GameObjectMoveByAction(selectedObj, delta));
 
     model->updateGrid();
 }
@@ -111,17 +98,14 @@ void GameView::render() {
     
     SDL_FillRect(window->screenSurface, NULL, SDL_MapRGB(window->screenSurface->format, 24, 206, 106));
     Rect boundsRect = model->boundsRect;
-    SDL_Rect rect = { boundsRect.getX() - 15, boundsRect.getY() - 15, boundsRect.getW() + 30, boundsRect.getH() + 30 };
+    SDL_Rect rect = { (int)boundsRect.pos.x, (int)boundsRect.pos.y, (int)boundsRect.size.x, (int)boundsRect.size.y };
     SDL_FillRect(window->screenSurface, &rect, SDL_MapRGB(window->screenSurface->format, 11, 96, 50));
     images->blitAllImagesOnSurface(window->screenSurface);
 
+    // Show select pointer on mouse
     if (selectedObj != nullptr) {
-        Point pos = selectedObj->pos;
-        Point size = selectedObj->size;
-        size = size / 2;
-        pos = pos - size;
         SDL_Rect srcrect = { 0, 0, 30, 30 };
-        SDL_Rect dstrect = { pos.x, pos.y, 0, 0 };
+        SDL_Rect dstrect = { mouse.x-15, mouse.y-15, 0, 0 };
         SDL_BlitSurface(preloadedSurfaces["select"], &srcrect, window->screenSurface, &dstrect);
     }
     
@@ -139,26 +123,12 @@ void GameView::handleMouseEvent(SDL_Event &e) {
     switch (e.type) {
         case SDL_MOUSEBUTTONDOWN:
             mouse.leftButtonDown = true;
-                if (selectedObj != nullptr) {
-                    if (model->findObjectAtPoint(Point(mouse.x, mouse.y)) == nullptr) {
-                        selectedObj->scheduleAction(new GameObjectMoveToAction(selectedObj,
-                            gridManager->correctPointToGrid(Point(mouse.x, mouse.y))));
-                    }
-                }
             break;
         case SDL_MOUSEBUTTONUP:
-            if (mouse.leftButtonDown) {
-                if (selectedObj == nullptr) {
-                    selectedObj = model->findObjectAtPoint(p);
-                }
-                else {
-                    selectedObj = nullptr;
-                }
-            }
             mouse.leftButtonDown = false;
             break;
-        // case SDL_MOUSEMOTION: // No behavior for now
-        //     break;
+        case SDL_MOUSEMOTION: // No behavior for now
+            break;
         default:
             break;
     }

@@ -24,10 +24,10 @@ void Renderer::draw() {
 
 void Renderer::drawRect(Rect rect) {
     SDL_Rect s_rect;
-    s_rect.x = rect.getCorner(TOP_LEFT).x;
-    s_rect.y = rect.getCorner(TOP_LEFT).y;
-    s_rect.w = rect.size.x * 2;
-    s_rect.h = rect.size.y * 2;
+    s_rect.x = rect.pos.x;
+    s_rect.y = rect.pos.y;
+    s_rect.w = rect.size.x;
+    s_rect.h = rect.size.y;
     SDL_RenderFillRect(renderer, &s_rect);
 }
 

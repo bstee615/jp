@@ -13,29 +13,29 @@ class Point {
     Point plus(const Point &p) {
         return Point(x + p.x, y + p.y);
     }
-    
+
     Point minus(const Point &p) {
         return Point(x - p.x, y - p.y);
     }
-    
+
     Point times(const int &scalar) {
         return Point(x * scalar, y * scalar);
     }
-    
+
     Point times(const Point &p) {
         return Point(x * p.x, y * p.y);
     }
-    
+
     Point div(const int &scalar) {
         if (scalar == 0) lprintf("div by 0.\n");
         return Point(x / scalar, y / scalar);
     }
-    
+
     Point div(const Point &p) {
         if (p.x == 0 || p.y == 0) lprintf("div by 0.\n");
         return Point(x / p.x, y / p.y);
     }
-    
+
     Point mod(const int &modScalar) {
         return Point((int)x % modScalar, (int)y % modScalar);
     }
@@ -50,51 +50,51 @@ public:
         y = point.y;
     }
 
-    Point &operator= (const Point &p) {
+    Point &operator= (Point p) {
         x = p.x;
         y = p.y;
         return *this;
     }
 
-    Point &operator+= (const Point &p) {
+    Point &operator+= (Point p) {
         x += p.x;
         y += p.y;
         return *this;
     }
 
-    Point operator+ (const Point &p) {
-        return plus(p);
+    Point operator+ (const Point &p) const {
+        return Point(*this).plus(p);
     }
 
-    Point operator- (const Point &p) {
-        return minus(p);
+    Point operator- (const Point &p) const {
+        return Point(*this).minus(p);
     }
 
-    Point operator* (const Point &p) {
-        return times(p);
+    Point operator* (const Point &p) const {
+        return Point(*this).times(p);
     }
 
-    Point operator* (const int &scalar) {
-        return times(scalar);
+    Point operator* (const int &scalar) const {
+        return Point(*this).times(scalar);
     }
 
-    Point operator/ (const Point &p) {
-        return div(p);
+    Point operator/ (const Point &p) const {
+        return Point(*this).div(p);
     }
 
-    Point operator/ (const int &scalar) {
-        return div(scalar);
+    Point operator/ (const int &scalar) const {
+        return Point(*this).div(scalar);
     }
 
-    Point operator% (const int &modScalar) {
-        return mod(modScalar);
+    Point operator% (const int &modScalar) const {
+        return Point(*this).mod(modScalar);
     }
 
-    bool operator>= (const int scalar) {
+    bool operator>= (const int scalar) const {
         return x >= scalar && y >= scalar;
     }
 
-    bool operator== (const Point &p) {
+    bool operator== (const Point &p) const {
         return x == p.x && y == p.y;
     }
 
@@ -124,6 +124,14 @@ public:
 
     Point normalized() {
         return div(magnitude());
+    }
+
+    Point zeroX() {
+        return Point(0, y);
+    }
+
+    Point zeroY() {
+        return Point(x, 0);
     }
 };
 

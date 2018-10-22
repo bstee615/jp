@@ -17,7 +17,7 @@ void GameImage::updateToModel() {
     if (obj->visible) {
         Point pos = obj->pos;
         Point size = obj->size;
-        moveTo(pos - (size / 2));
+        moveTo(pos);
     }
 }
 

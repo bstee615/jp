@@ -41,7 +41,7 @@ public:
         size = r.size;
     }
 
-    Rect &operator= (const Rect &r) {
+    Rect &operator= (Rect &r) {
         pos = r.pos;
         size = r.size;
         return *this;
@@ -57,67 +57,59 @@ public:
         return pos;
     }
 
-    Point *getAllCorners() {
-        Point *points = new Point[4];
-        points[0] = getCorner(TOP_RIGHT);
-        points[1] = getCorner(TOP_LEFT);
-        points[2] = getCorner(BOTTOM_LEFT);
-        points[3] = getCorner(BOTTOM_RIGHT);
-        return points;
-    }
-
-    Point getCorner(Corner c) {
-        switch (c) {
-            case TOP_RIGHT:
-                return pos + size.inverseY();
-            case TOP_LEFT:
-                return pos + size.inverse();
-            case BOTTOM_LEFT:
-                return pos + size.inverseX();
-            case BOTTOM_RIGHT:
-                return pos + size;
-            default:
-                lprintf("Error: invalid corner %d.\n", c);
-                return Point();
-        }
-    }
-    
     bool contains(Point p) {
-        Point top_left = getCorner(TOP_LEFT);
-        Point bottom_right = getCorner(BOTTOM_RIGHT);
-        return !(p.x < top_left.x ||
-                p.y < top_left.y ||
+        Point bottom_right = pos + size;
+        return !(p.x < pos.x ||
+                p.y < pos.y ||
                 p.x >= bottom_right.x ||
                 p.y >= bottom_right.y);
     }
-    
+
+    bool contains(Rect r) {
+        return contains(r.pos) && // top left
+            contains(r.pos + r.size.zeroX()) && // bottom left
+            contains(r.pos + r.size.zeroY()) && // top right
+            contains(r.pos + r.size); // bottom right
+    }
+
     Point correction(Point p) {
-        Point top_left = getCorner(TOP_LEFT);
-        Point bottom_right = getCorner(BOTTOM_RIGHT);
+        Point bottom_right = pos + size;
 
         Point ret;
-        if (p.x < top_left.x) {
-            ret.x = top_left.x - p.x;
+        if (p.x < pos.x) {
+            ret.x = pos.x - p.x;
         }
-        else if (p.x >= bottom_right.x) {
+        else if (p.x > bottom_right.x) {
             ret.x = bottom_right.x - p.x;
         }
 
-        if (p.y < top_left.y) {
-            ret.y = top_left.y - p.y;
+        if (p.y < pos.y) {
+            ret.y = pos.y - p.y;
         }
-        else if (p.y >= bottom_right.y) {
+        else if (p.y > bottom_right.y) {
             ret.y = bottom_right.y - p.y;
         }
-        // lprintf("correction: (%f, %f)\n", ret.x, ret.y);
 
         return ret;
     }
 
-    int getX() { return (pos - size).x; }
-    int getY() { return (pos - size).y; }
-    int getW() { return (size * 2).x; }
-    int getH() { return (size * 2).y; }
+    Point correction(Rect r) {
+        Point correction;
+        if (contains(r.pos)) { // top left
+            correction = pos + size - r.pos;
+        }
+        if (contains(r.pos + r.size.zeroX())) { // bottom left
+            correction = pos + size.zeroY() - r.pos + r.size.zeroX();
+        }
+        if (contains(r.pos + r.size.zeroY())) { // top right
+            correction = pos + size.zeroX() - r.pos + r.size.zeroY();
+        }
+        if (contains(r.pos + r.size)) { // bottom right
+            correction = pos - r.pos + r.size;
+        }
+
+        return correction;
+    }
 };
 
 #endif
